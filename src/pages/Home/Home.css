@@ -1,0 +1,36 @@
+.header {
+  background-color: #0000;
+  padding: 20px;
+  text-align: center;
+}
+
+.Highlighted {
+  background: linear-gradient(120deg, rgba(255,255,0,0.5) 0%, rgba(255,255,0,0.5) 100%);
+  padding: 0 2px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .3s ease;
+}
+
+.Highlighted:hover {
+  background: linear-gradient(120deg, rgba(255,255,0,0.8) 0%, rgba(255,255,0,0.8) 100%);
+  transition: background 0.3s ease;
+}
+
+.buttons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  width: fit-content;
+}
+
+.signup-button {
+  margin-left: '1rem';
+  padding: '0.5rem 1rem';
+  background-color: '#4CAF50';
+  color: '#fff';
+  border: 'none';
+  border-radius: '4px';
+  cursor: 'pointer';
+  font-family: 'Josefin Sans, sans-serif';
+}

@@ -1,0 +1,89 @@
+.features-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #0f0f0f, #1a1a1a, #0f0f0f);
+  color: #fff;
+  font-family: 'Josefin Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+.feature-details {
+  margin-top: 15px;
+  font-size: 0.95rem;
+  color: #aaa;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.features-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100px 20px 50px;
+  text-align: center;
+}
+
+.features-title {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 3rem;
+  background: linear-gradient(90deg, #4CAF50, #00e0ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 60px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 40px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  padding: 30px 20px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.feature-card:hover {
+  border-color: #4CAF50;
+  box-shadow: 0 8px 20px rgba(0, 255, 200, 0.2);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  color: #4CAF50;
+  margin-bottom: 15px;
+  transition: transform 0.3s;
+}
+
+.feature-card:hover .feature-icon {
+  transform: rotate(10deg) scale(1.2);
+}
+
+.feature-name {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #00e0ff;
+}
+
+.feature-desc {
+  font-size: 1rem;
+  color: #ccc;
+  line-height: 1.5;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .features-title {
+    font-size: 2.2rem;
+    margin-bottom: 40px;
+  }
+}

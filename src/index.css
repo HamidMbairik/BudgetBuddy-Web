@@ -1,0 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=New+Amsterdam&family=Wendy+One&display=swap');
+@import "tailwindcss";
+
+body {
+  background: #333;
+}
