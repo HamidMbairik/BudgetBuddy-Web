@@ -29,3 +29,87 @@ button {
 button:hover {
   opacity: 0.9;
 }
+
+:root[data-theme='dark'] {
+  --bg-main: radial-gradient(circle at top, #0f172a 0%, #020617 45%, #000 100%);
+  --card-bg: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  --card-border: rgba(31, 41, 55, 0.85);
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --accent: #22c55e;
+}
+
+:root[data-theme='light'] {
+  --bg-main: radial-gradient(circle at top, #f5f7fb 0%, #e5e7eb 45%, #dfe3ea 100%);
+  --card-bg: radial-gradient(circle at top, #ffffff, #f3f4f6);
+  --card-border: rgba(209, 213, 219, 0.85);
+  --text-primary: #0f172a;
+  --text-secondary: #4b5563;
+  --accent: #22c55e;
+}
+
+body {
+  background: var(--bg-main, #0f172a);
+  color: var(--text-primary, #f9fafb);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Apply theme background/text to main page layouts */
+.landing-layout,
+.home-page-layout,
+.dashboard-layout,
+.notes-layout,
+.profile-layout,
+.settings-layout,
+.expenses-layout,
+.income-layout,
+.agent-layout,
+.contact-layout,
+.features-layout,
+.about-layout,
+.login-layout,
+.signup-layout {
+  background: var(--bg-main);
+  color: var(--text-primary);
+}
+
+/* Shared card/background surfaces */
+.home-welcome-card,
+.home-stat-card,
+.home-action-card,
+.dashboard-card,
+.dashboard-stat-card,
+.dashboard-chart-card,
+.dashboard-recent,
+.note-card,
+.profile-card,
+.stat-card,
+.settings-section,
+.summary-card,
+.expense-item,
+.category-item,
+.income-item,
+.agent-container,
+.contact-form-section,
+.info-card,
+.feature-card,
+.feature-preview-card,
+.cta-content,
+.story-card,
+.personality-card,
+.why-card,
+.mission-card,
+.final-card,
+.login-form,
+.signup-form {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  color: var(--text-primary);
+}
+
+/* Secondary text color helper */
+.text-secondary,
+.subtitle,
+.section-description {
+  color: var(--text-secondary);
+}

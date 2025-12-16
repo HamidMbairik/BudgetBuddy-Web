@@ -1,0 +1,216 @@
+/* Sidebar container */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(180deg, #050816 0%, #111827 50%, #020617 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: space-between;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  overflow-y: auto;
+  transition: width 0.3s ease, padding 0.3s ease;
+}
+
+/* Collapsed state */
+.sidebar.collapsed {
+  width: 80px;
+  padding: 2rem 0.75rem;
+  align-items: center;
+}
+
+.sidebar.collapsed .sidebar-link {
+  justify-content: center;
+  padding: 0.65rem;
+}
+
+.sidebar.collapsed .sidebar-link-text {
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-title {
+  display: none;
+}
+
+/* Sidebar header with toggle button */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sidebar-logo {
+  text-decoration: none;
+  flex: 1;
+}
+
+.sidebar-title {
+  margin: 0;
+  color: #4CAF50;
+  font-family: 'New Amsterdam, sans-serif';
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+
+.sidebar-toggle {
+  background: rgba(31, 41, 55, 0.6);
+  border: 1px solid rgba(55, 65, 81, 0.7);
+  border-radius: 0.5rem;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(55, 65, 81, 0.8);
+  color: #e5e7eb;
+  border-color: rgba(55, 65, 81, 1);
+}
+
+.sidebar.collapsed .sidebar-toggle {
+  margin: 0 auto;
+}
+
+/* Links container */
+.sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sidebar-footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(55, 65, 81, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Individual link */
+.sidebar-link {
+  text-decoration: none;
+  border-radius: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  position: relative;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .sidebar-link {
+  width: 100%;
+  justify-content: center;
+}
+
+.sidebar-link-icon {
+  font-size: 1.2rem;
+  color: #9ca3af;
+}
+
+.sidebar-link-text {
+  margin: 0;
+  color: #d1d5db;
+  font-family: 'Josefin Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.sidebar-link:hover {
+  background: rgba(55, 65, 81, 0.7);
+  transform: translateX(3px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.7);
+}
+
+.sidebar-link:hover .sidebar-link-text {
+  color: #f9fafb;
+}
+
+.sidebar-link:hover .sidebar-link-icon {
+  color: #e5e7eb;
+}
+
+/* Active link state */
+.sidebar-link.active {
+  background: radial-gradient(circle at left, rgba(34, 197, 94, 0.25), transparent 55%);
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
+  transform: translateX(4px);
+}
+
+.sidebar-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0.35rem;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 999px;
+  background: #22c55e;
+}
+
+.sidebar-link.active .sidebar-link-text {
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.sidebar-link.active .sidebar-link-icon {
+  color: #22c55e;
+}
+
+/* Make sure font applies to everything inside the sidebar */
+.sidebar * {
+  font-family: 'Josefin Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Responsive: On smaller screens, sidebar can scroll if content is too tall */
+@media (max-height: 600px) {
+  .sidebar {
+    overflow-y: auto;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 80px;
+    padding: 1.5rem 0.5rem;
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.collapsed {
+    transform: translateX(-100%);
+  }
+
+  .sidebar-title {
+    display: none;
+  }
+
+  .sidebar-link-text {
+    display: none;
+  }
+
+  .sidebar-link {
+    justify-content: center;
+    padding: 0.75rem;
+  }
+
+  .sidebar-toggle-btn {
+    width: 100%;
+  }
+}
+

@@ -1,101 +1,374 @@
-.about-container {
-  position: relative;
-  width: 100%;
+/* About Page Layout */
+.about-layout {
   min-height: 100vh;
-  padding: 6rem 2rem;
-  background: linear-gradient(135deg, #0f0f0f, #111, #0a0a0a);
-  overflow: hidden;
-  color: #fff;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at top, #0f172a 0%, #020617 45%, #000 100%);
+}
+
+.about-container {
+  flex: 1;
   display: flex;
   justify-content: center;
-  margin: 0;
+  align-items: flex-start;
+  padding: 6rem 2rem 4rem;
+  min-height: calc(100vh - 200px);
 }
 
-/* Add subtle floating circles in background */
-.about-container::before {
-  content: '';
-  position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(76, 175, 80, 0.2) 2px, transparent 2px),
-              radial-gradient(circle, rgba(255, 255, 255, 0.15) 2px, transparent 2px);
-  background-size: 100px 100px;
-  animation: floatBackground 20s linear infinite;
-  z-index: 0;
-}
-
-@keyframes floatBackground {
-  0% { transform: translate(0,0); }
-  100% { transform: translate(-50px,-50px); }
-}
-
-/* Content wrapper */
 .about-content {
-  position: relative;
-  z-index: 1;
-  max-width: 900px;
-  text-align: center;
+  max-width: 1000px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
-/* Page title */
-/* Page title */
-.page-title {
-  font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 3rem;
+/* Header */
+.about-header {
+  text-align: center;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.about-title-wrapper {
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: 'Josefin Sans', sans-serif;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.about-icon {
+  font-size: 3rem;
+  color: #22c55e;
+}
+
+.about-title {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 3rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
 }
 
 .app-name {
-  font-family: 'New Amsterdam', sans-serif; /* updated font */
-  color: #4CAF50;
+  color: #22c55e;
 }
 
-/* Paragraph section */
-.paragraph {
+.about-intro {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.25rem;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Story Section */
+.about-story {
   display: flex;
   flex-direction: column;
-  font-weight: 800;
-  gap: 2.5rem;
+  gap: 2rem;
 }
 
-/* Section titles */
-.paragraph-title {
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #4CAF50;
+.story-card {
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(31, 41, 55, 0.85);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.story-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.story-icon {
   font-size: 2rem;
-  font-family: 'Josefin Sans', sans-serif;
+  color: #a855f7;
 }
 
-.paragraph-subtitle {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #4CAF50;
-  margin-bottom: 0.5rem;
-  font-family: 'Josefin Sans', sans-serif;
+.story-title {
+  font-family: 'New Amsterdam', sans-serif;
   font-size: 2rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
 }
 
-/* Text */
-.paragraph-text {
-  font-size: 1.05rem;
-  color: #ddd;
-  line-height: 1.6;
-  font-size: 1.3rem;
+.story-text {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #d1d5db;
+  margin: 0;
+  line-height: 1.8;
+  font-weight: 300;
 }
 
-/* Highlight talk */
-.talk {
+/* Personality Cards */
+.personality-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.personality-card {
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(31, 41, 55, 0.85);
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.personality-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.personality-card.builder {
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.personality-card.builder:hover {
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+.personality-card.human {
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.personality-card.human:hover {
+  border-color: rgba(34, 197, 94, 0.6);
+}
+
+.personality-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.personality-card.builder .personality-icon {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.personality-card.human .personality-icon {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.personality-name {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 1.75rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
+}
+
+.personality-description {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1rem;
+  color: #d1d5db;
+  margin: 0;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.personality-detail {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.95rem;
+  color: #9ca3af;
+  margin: 0;
+  line-height: 1.7;
+  font-weight: 300;
   font-style: italic;
-  color: #bbb;
-  display: block;
-  margin-top: 0.5rem;
+}
+
+/* Why Section */
+.about-why {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.why-card {
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(31, 41, 55, 0.85);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.why-icon-wrapper {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.75rem;
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto;
+}
+
+.why-title {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 2rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
+}
+
+.why-text {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #d1d5db;
+  margin: 0;
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+.highlight {
+  color: #22c55e;
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* Mission Section */
+.about-mission {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mission-card {
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(31, 41, 55, 0.85);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.mission-icon-wrapper {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.75rem;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto;
+}
+
+.mission-title {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 2rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
+}
+
+.mission-text {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #d1d5db;
+  margin: 0;
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+/* Final Section */
+.about-final {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.final-card {
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.final-title {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 2rem;
+  color: #22c55e;
+  margin: 0 0 1rem 0;
+  font-weight: 400;
+}
+
+.final-text {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #d1d5db;
+  margin: 0;
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .about-container {
+    padding: 4rem 1.5rem 3rem;
+  }
+
+  .about-title {
+    font-size: 2.25rem;
+  }
+
+  .about-icon {
+    font-size: 2.5rem;
+  }
+
+  .about-intro {
+    font-size: 1.1rem;
+  }
+
+  .personality-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .story-card,
+  .why-card,
+  .mission-card,
+  .final-card {
+    padding: 1.5rem;
+  }
+
+  .story-title,
+  .why-title,
+  .mission-title,
+  .final-title {
+    font-size: 1.75rem;
+  }
+
+  .story-text,
+  .why-text,
+  .mission-text,
+  .final-text {
+    font-size: 1rem;
+  }
 }

@@ -10,8 +10,6 @@ const Footer = () => {
       {/* Footer Styles */}
       <style>{`
         .footer {
-          position: absolute;
-          bottom: 0;
           width: 100%;
           text-align: center;
           padding: 0.5rem 0;

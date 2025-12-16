@@ -1,0 +1,269 @@
+/* Settings Page Layout */
+.settings-layout {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #0f172a 0%, #020617 45%, #000 100%);
+}
+
+.settings-main {
+  padding: 0;
+  min-height: 100vh;
+}
+
+.settings-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* Header */
+.settings-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.settings-title {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 2.5rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
+}
+
+.settings-subtitle {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Settings Section */
+.settings-section {
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(31, 41, 55, 0.85);
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.settings-section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.settings-icon-wrapper {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.settings-icon-wrapper.currency {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.settings-icon-wrapper.language {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.settings-icon-wrapper.theme {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+.settings-section-title {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 1.5rem;
+  color: #f9fafb;
+  margin: 0 0 0.25rem 0;
+  font-weight: 400;
+}
+
+.settings-section-description {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Settings Options */
+.settings-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.settings-option {
+  background: rgba(15, 23, 42, 0.6);
+  border: 2px solid rgba(31, 41, 55, 0.85);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.settings-option:hover {
+  background: rgba(31, 41, 55, 0.8);
+  border-color: rgba(55, 65, 81, 1);
+  transform: translateY(-2px);
+}
+
+.settings-option.active {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: #22c55e;
+}
+
+.option-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.option-symbol {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 1.5rem;
+  color: #f9fafb;
+  font-weight: 400;
+}
+
+.option-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.option-name {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.95rem;
+  color: #f9fafb;
+  font-weight: 500;
+}
+
+.option-code {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.option-check {
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+/* Theme Options */
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.theme-option {
+  background: rgba(15, 23, 42, 0.6);
+  border: 2px solid rgba(31, 41, 55, 0.85);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.theme-option:hover {
+  background: rgba(31, 41, 55, 0.8);
+  border-color: rgba(55, 65, 81, 1);
+  transform: translateY(-2px);
+}
+
+.theme-option.active {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: #22c55e;
+}
+
+.theme-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.theme-icon.dark {
+  background: rgba(15, 23, 42, 0.8);
+  color: #6366f1;
+}
+
+.theme-icon.light {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+}
+
+.theme-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.theme-name {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #f9fafb;
+  font-weight: 600;
+}
+
+.theme-description {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  font-weight: 300;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .settings-main {
+    margin-left: 0 !important;
+  }
+
+  .settings-container {
+    padding: 1.5rem;
+  }
+
+  .settings-section {
+    padding: 1.5rem;
+  }
+
+  .settings-options {
+    grid-template-columns: 1fr;
+  }
+
+  .theme-options {
+    grid-template-columns: 1fr;
+  }
+}
+

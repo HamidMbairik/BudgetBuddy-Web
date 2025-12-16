@@ -1,8 +1,8 @@
 // Navbar.jsx
 import { color } from 'framer-motion'
 import React from 'react'
-// I realized we need Link from react-router-dom to make navigation work without reloading
 import { Link } from 'react-router-dom'
+import { usePreferences } from '../../contexts/PreferencesContext'
 
 // Navbar styles
 const navbarStyle = {
@@ -62,32 +62,29 @@ const LogInButtonStyle = {
 
 // Okay, I remembered React needs components to start with a capital letter
 const Navbar = ({ title, links, currentPage}) => {
+  const { t } = usePreferences()
+
   return (
     <nav style={navbarStyle}>
-      
-      {/* Logo: I fixed this to use Link instead of a to make it work with React Router */}
       <h1>
         <Link to="/" style={logoStyle}>{title}</Link>
       </h1>
 
-      {/* Navigation Links */}
       <div>
         {links && links.map((link, index) => (
-          // Here I also fixed <a> to <Link> and changed href to path
           <Link
             key={index}
             to={link.path}
-            style={ link.name.toLowerCase() === currentPage ? {...LinkStyle, ...currentPageStyle} : LinkStyle } 
+            style={ link.name.toLowerCase() === currentPage ? {...LinkStyle, ...currentPageStyle} : LinkStyle }
           >
-            {link.name}
+            {t(link.name.toLowerCase())}
           </Link>
         ))}
       </div>
 
-      {/* Sign Up / Log In Buttons */}
       <div>
         <Link to="/signup">
-          <button style={SignUpButtonStyle}>Sign Up</button>
+          <button style={SignUpButtonStyle}>{t('get_started')}</button>
         </Link>
         <Link to="/login">
           <button style={LogInButtonStyle}>Log In</button>
@@ -97,5 +94,4 @@ const Navbar = ({ title, links, currentPage}) => {
   )
 }
 
-// Export with capitalized name
 export default Navbar

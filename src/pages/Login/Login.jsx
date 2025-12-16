@@ -1,112 +1,124 @@
-import React, { useState } from "react";
-import Navbar from "../../components/common/navbar";
-import Footer from "../../components/common/footer";
-import { FaGoogle, FaGithub } from "react-icons/fa";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
-
-import "./Login.css";
-
-// Initialize tsParticles
-const particlesInit = async (main) => {
-  await loadFull(main);
-};
-
-const particlesLoaded = (container) => {};
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import Navbar from '../../components/common/navbar'
+import Footer from '../../components/common/footer'
+import { FaGoogle, FaGithub } from 'react-icons/fa'
+import { TbMail, TbLock, TbArrowRight } from 'react-icons/tb'
+import './Login.css'
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const links = [
-    { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
-    { name: "Features", path: "/features" },
-    { name: "Contact Us", path: "/contact" },
-  ];
+    { name: 'Home', path: '/' },
+    { name: 'About', path: '/about' },
+    { name: 'Features', path: '/features' },
+    { name: 'Contact', path: '/contact' },
+  ]
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = async (e) => {
+    e.preventDefault()
     if (!email || !password) {
-      alert("Please fill in all fields");
-      return;
+      alert('Please fill in all fields')
+      return
     }
-    console.log("Login submitted:", { email, password });
-    setEmail("");
-    setPassword("");
-  };
 
-  // Starry effect config
-  const starryConfig = {
-    fullScreen: { enable: false },
-    fpsLimit: 60,
-    background: { color: "#000" },
-    particles: {
-      number: { value: 40, density: { enable: true, area: 800 } },
-      color: { value: "#4CAF50" },
-      shape: { type: "circle" },
-      opacity: { value: 0.3, random: true },
-      size: { value: { min: 1, max: 3 } },
-      move: { enable: true, speed: 0.2, direction: "none", outModes: "bounce" },
-      links: { enable: true, distance: 120, color: "#4CAF50", opacity: 0.2, width: 1 },
-    },
-    interactivity: {
-      events: {
-        onHover: { enable: true, mode: "repulse" },
-        onClick: { enable: true, mode: "push" },
-      },
-      modes: { repulse: { distance: 100 }, push: { quantity: 4 } },
-    },
-    detectRetina: true,
-  };
+    setIsLoading(true)
+    // TODO: Replace with backend API call
+    // Example: await fetch('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) })
+    setTimeout(() => {
+      console.log('Login submitted:', { email, password })
+      setIsLoading(false)
+      setEmail('')
+      setPassword('')
+    }, 1000)
+  }
 
   return (
-    <div className="login-container">
-      {/* Particles */}
-      <Particles
-        id="tsparticles"
-        init={particlesInit}
-        loaded={particlesLoaded}
-        options={starryConfig}
-        style={{ position: "absolute", width: "100%", height: "100%", zIndex: 0 }}
-      />
-
+    <div className="login-layout">
       <Navbar title="BudgetBuddy" links={links} />
 
-      <form className="login-form" onSubmit={onSubmit}>
-        <h2 className="title">Login</h2>
+      <div className="login-container">
+        <div className="login-content">
+          <div className="login-header">
+            <h1 className="login-title">Welcome Back</h1>
+            <p className="login-subtitle">Sign in to continue to BudgetBuddy</p>
+          </div>
 
-        <button className="google-login">
-          <FaGoogle /> Continue with Google
-        </button>
-        <button className="github-login">
-          <FaGithub /> Continue with GitHub
-        </button>
+          <form className="login-form" onSubmit={onSubmit}>
+            {/* Social Login Buttons */}
+            <div className="social-buttons">
+              <button type="button" className="social-btn google-btn">
+                <FaGoogle /> Continue with Google
+              </button>
+              <button type="button" className="social-btn github-btn">
+                <FaGithub /> Continue with GitHub
+              </button>
+            </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+            <div className="divider">
+              <span>or</span>
+            </div>
 
-        <button className="login-button" type="submit">
-          Login
-        </button>
-        <a className="no-account" href="./signup">
-          Don't have an account? Sign Up
-        </a>
-      </form>
+            {/* Email Input */}
+            <div className="form-group">
+              <label htmlFor="email" className="form-label">
+                <TbMail className="input-icon" />
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="form-input"
+                required
+              />
+            </div>
+
+            {/* Password Input */}
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">
+                <TbLock className="input-icon" />
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="form-input"
+                required
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button type="submit" className="submit-btn" disabled={isLoading}>
+              {isLoading ? 'Signing in...' : (
+                <>
+                  Sign In <TbArrowRight />
+                </>
+              )}
+            </button>
+
+            {/* Sign Up Link */}
+            <p className="signup-link">
+              Don't have an account?{' '}
+              <Link to="/signup" className="link">
+                Sign Up
+              </Link>
+            </p>
+          </form>
+        </div>
+      </div>
 
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

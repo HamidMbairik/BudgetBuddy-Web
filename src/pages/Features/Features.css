@@ -1,89 +1,255 @@
-.features-page {
+/* Features Page Layout */
+.features-layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #0f0f0f, #1a1a1a, #0f0f0f);
-  color: #fff;
-  font-family: 'Josefin Sans', sans-serif;
-  overflow-x: hidden;
+  background: radial-gradient(circle at top, #0f172a 0%, #020617 45%, #000 100%);
 }
 
-.feature-details {
-  margin-top: 15px;
-  font-size: 0.95rem;
-  color: #aaa;
-  line-height: 1.6;
-  text-align: left;
+.features-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 6rem 2rem 4rem;
+  min-height: calc(100vh - 200px);
 }
 
 .features-content {
-  flex: 1;
+  max-width: 1400px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 100px 20px 50px;
+  gap: 4rem;
+}
+
+/* Header */
+.features-header {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .features-title {
   font-family: 'New Amsterdam', sans-serif;
   font-size: 3rem;
-  background: linear-gradient(90deg, #4CAF50, #00e0ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 60px;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
 }
 
+.features-subtitle {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.25rem;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Features Grid */
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 40px;
-  width: 100%;
-  max-width: 1200px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 15px;
-  padding: 30px 20px;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(31, 41, 55, 0.85);
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .feature-card:hover {
-  border-color: #4CAF50;
-  box-shadow: 0 8px 20px rgba(0, 255, 200, 0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  border-color: rgba(31, 41, 55, 1);
 }
 
-.feature-icon {
-  font-size: 3rem;
-  color: #4CAF50;
-  margin-bottom: 15px;
-  transition: transform 0.3s;
+.feature-card.active {
+  border-color: rgba(34, 197, 94, 0.4);
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.2);
 }
 
-.feature-card:hover .feature-icon {
-  transform: rotate(10deg) scale(1.2);
+.feature-icon-wrapper {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  background: rgba(34, 197, 94, 0.15);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
 }
 
-.feature-name {
+.feature-card:hover .feature-icon-wrapper {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.feature-title {
+  font-family: 'New Amsterdam', sans-serif;
   font-size: 1.5rem;
-  margin-bottom: 10px;
-  color: #00e0ff;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
 }
 
-.feature-desc {
+.feature-description {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.95rem;
+  color: #d1d5db;
+  margin: 0;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+.feature-details {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(31, 41, 55, 0.5);
+  animation: slideDown 0.3s ease;
+}
+
+.feature-details p {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.9rem;
+  color: #9ca3af;
+  margin: 0;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 200px;
+  }
+}
+
+.feature-indicator {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(31, 41, 55, 0.8);
+  border: 1px solid rgba(55, 65, 81, 0.7);
+  border-radius: 50%;
+  color: #9ca3af;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.feature-card.active .feature-indicator {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #22c55e;
+}
+
+/* CTA Section */
+.features-cta {
+  text-align: center;
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(31, 41, 55, 0.85);
+  border-radius: 1rem;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cta-title {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 2.25rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
+}
+
+.cta-text {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 300;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2.5rem;
+  background: #22c55e;
+  color: #fff;
+  border-radius: 0.75rem;
+  font-family: 'Josefin Sans', sans-serif;
   font-size: 1rem;
-  color: #ccc;
-  line-height: 1.5;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  align-self: center;
 }
 
-/* Responsive tweaks */
+.cta-button:hover {
+  background: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .features-container {
+    padding: 4rem 1.5rem 3rem;
+  }
+
   .features-title {
-    font-size: 2.2rem;
-    margin-bottom: 40px;
+    font-size: 2.25rem;
+  }
+
+  .features-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+
+  .features-cta {
+    padding: 2rem 1.5rem;
+  }
+
+  .cta-title {
+    font-size: 1.75rem;
   }
 }

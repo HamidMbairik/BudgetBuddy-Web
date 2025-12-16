@@ -1,120 +1,106 @@
 import React from 'react'
-
-// import any necessary components or styles here
-import Navbar from '../../components/common/navbar'
-// import Footer from '../../components/common/footer'
-import HeroIllustration from '../../assets/hero-illustration.svg'
-import { img, text } from 'framer-motion/client'
-// Styles imported from the Css file
-
-import './Home.css'
-
 import { Link } from 'react-router-dom'
+import Navbar from '../../components/common/navbar'
 import Footer from '../../components/common/footer'
-// Styles can be added here or imported from a separate CSS/SCSS file
-
-const TitleStyle = {
-  fontFamily: 'New Amsterdam, sans-serif',
-  fontSize: '3.5rem',
-  color: '#4CAF50',
-}
-
-const DescriptionStyle = {
-  fontFamily: 'Josefin Sans, sans-serif',
-  fontSize: '1.8rem',
-  color: '#555',
-  marginTop: '1rem',
-  fontWeight: '300',
-}
-
-const TextContainerStyle = {
-  backgroundColor: 'yelow',
-  marginBottom: '2rem',
-  textAlign: 'left',
-  height: '90vh',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  padding: '2rem',
-  position: 'relative',
-  zIndex: 1,
-}
-
-const HeroStyles = {
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  height: '90%',
-  marginTop: '4rem',
-  width: 'auto',
-  display: 'block',
-  margin: '2rem auto',
-  zIndex: -1,
-}
-
-const learnStyles = {
-  marginRight: '1rem',
-  padding: '0.7rem 1.5rem',
-  backgroundColor: 'transparent',
-  border: '2px solid #4CAF50',
-  color: '#4CAF50',
-  borderRadius: '4px',
-  cursor: 'pointer',
-  fontFamily: 'Josefin Sans, sans-serif',
-  fontSize: '1rem',
-}
-
-const GetStartedStyles = {
-  padding: '0.7rem 1.5rem',
-  backgroundColor: '#4CAF50',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer',
-  fontFamily: 'Josefin Sans, sans-serif',
-  fontSize: '1rem',
-}
+import './Home.css'
+import { TbMoneybag, TbChartPie, TbTarget, TbArrowRight, TbTrendingUp } from 'react-icons/tb'
 
 const Home = () => {
-
   const links = [
-    { name: "Home", path: "/" },
-    { name: "Features", path: "/features" },
-    { name: "About", path: "/about" },
-    { name: "Contact", path: "/contact" },
-  ];
-  
+    { name: 'Home', path: '/' },
+    { name: 'Features', path: '/features' },
+    { name: 'About', path: '/about' },
+    { name: 'Contact', path: '/contact' },
+  ]
+
+  const features = [
+    {
+      icon: <TbChartPie />,
+      title: 'Track Expenses',
+      description: 'Monitor your spending with detailed analytics',
+    },
+    {
+      icon: <TbMoneybag />,
+      title: 'Manage Income',
+      description: 'Keep track of all your income sources',
+    },
+    {
+      icon: <TbTarget />,
+      title: 'Set Goals',
+      description: 'Achieve your savings goals faster',
+    },
+  ]
 
   return (
-    
-    <div>
-      <Navbar title="BudgetBuddy" links={links} currentPage="home"/>
-      {/* Add more content for the Home page as needed */}
+    <div className="landing-layout">
+      <Navbar title="BudgetBuddy" links={links} currentPage="home" />
 
-      <img 
-        src={HeroIllustration} 
-        alt="Hero Illustration" 
-        style={HeroStyles}
-      />
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="hero-content">
+          <div className="hero-text">
+            <h1 className="hero-title">
+              Take Control of Your <span className="highlight">Finances</span>
+            </h1>
+            <p className="hero-description">
+              Track your expenses, manage your income, and reach your savings goals with BudgetBuddy.
+              The smart way to manage your money.
+            </p>
+            <div className="hero-buttons">
+              <Link to="/signup" className="btn-primary">
+                Get Started <TbArrowRight />
+              </Link>
+              <Link to="/about" className="btn-secondary">
+                Learn More
+              </Link>
+            </div>
+          </div>
+          <div className="hero-visual">
+            <div className="hero-card">
+              <TbMoneybag className="hero-icon" />
+              <div className="hero-stats">
+                <div className="stat-item">
+                  <span className="stat-label">Balance</span>
+                  <span className="stat-value">$3,420</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Savings</span>
+                  <span className="stat-value positive">+18%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        {/* Title */}
-      <div className="TextContainer" style={TextContainerStyle}>
-        {/* Title and Description */}
-        <h2 style={TitleStyle}>Controle your Finances</h2>
-        <p style={DescriptionStyle}>Track your expenses, manage your<br /> income, and reach your savings goals<br /> with <span className='Highlighted'>BudgetBuddy</span>.</p>
-        {/* Buttons */}
-        <div className="buttons">
-          <Link to="/about">
-            <button style={learnStyles}>Learn More</button>
-          </Link>
+      {/* Features Preview */}
+      <section className="features-preview">
+        <h2 className="section-title">Why Choose BudgetBuddy?</h2>
+        <div className="features-grid">
+          {features.map((feature, index) => (
+            <div key={index} className="feature-preview-card">
+              <div className="feature-preview-icon">{feature.icon}</div>
+              <h3 className="feature-preview-title">{feature.title}</h3>
+              <p className="feature-preview-description">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-          <Link to="/signup">
-            <button style={GetStartedStyles}>Get Started →</button>
+      {/* CTA Section */}
+      <section className="cta-section">
+        <div className="cta-content">
+          <h2 className="cta-title">Ready to Transform Your Finances?</h2>
+          <p className="cta-description">
+            Join thousands of users who are already taking control of their money
+          </p>
+          <Link to="/signup" className="cta-button">
+            Start Free Today <TbTrendingUp />
           </Link>
         </div>
-      </div>
+      </section>
 
-    <Footer />
+      <Footer />
     </div>
   )
 }

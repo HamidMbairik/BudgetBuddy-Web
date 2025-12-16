@@ -14,6 +14,12 @@ import Income from '../pages/Income/Income.jsx'; // Income page component
 import About from '../pages/About/About.jsx'; // About page component
 import Features from '../pages/Features/Features.jsx'; // Features page component
 import Contact from '../pages/Contact/contact.jsx'; // Contact page component
+import HomePage from '../pages/Home/HomePage.jsx'; // Home page component
+import Settings from '../pages/Settings/Settings.jsx'; // Settings page component
+import Agent from '../pages/Agent/Agent.jsx'; // Agent page component
+import Notes from '../pages/Notes/Notes.jsx'; // Notes page component
+import Expenses from '../pages/Expenses/Expenses.jsx'; // Expenses page component
+import Profile from '../pages/Profile/Profile.jsx'; // Profile page component
 
 const AppRoutes = () => {
   // This component returns all the routes for your app
@@ -39,6 +45,12 @@ const AppRoutes = () => {
       <Route path="/features" element={<Features />} />
       {/* When the URL is "/features", render the Features component */}
       <Route path="/contact" element={<Contact />} />
+      <Route path="/home" element={<HomePage />} />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/agent" element={<Agent />} />
+      <Route path="/notes" element={<Notes />} />
+      <Route path="/expenses" element={<Expenses />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 };

@@ -1,0 +1,417 @@
+/* Home Page Layout */
+.home-page-layout {
+  display: flex;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #0f172a 0%, #020617 45%, #000 100%);
+}
+
+.home-page-main {
+  flex: 1;
+  padding: 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+}
+
+/* Welcome Section */
+.home-welcome {
+  display: grid;
+  grid-template-columns: 1fr minmax(280px, 0.4fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.home-welcome-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.home-welcome-title {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 2.75rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.home-welcome-subtitle {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 300;
+}
+
+.home-welcome-card {
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(31, 41, 55, 0.85);
+  border-radius: 1rem;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.home-balance-icon {
+  font-size: 2.5rem;
+  color: #22c55e;
+  margin-bottom: 0.75rem;
+}
+
+.home-balance-label {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.home-balance-amount {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 2.25rem;
+  color: #22c55e;
+  margin: 0 0 0.5rem 0;
+  font-weight: 400;
+}
+
+.home-balance-trend {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #22c55e;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Quick Stats */
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+}
+
+.home-stat-card {
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(31, 41, 55, 0.85);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.home-stat-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.home-stat-icon {
+  font-size: 1.5rem;
+}
+
+.home-stat-icon.income {
+  color: #22c55e;
+}
+
+.home-stat-icon.expense {
+  color: #f97316;
+}
+
+.home-stat-icon.savings {
+  color: #3b82f6;
+}
+
+.home-stat-label {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 400;
+}
+
+.home-stat-value {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 2rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
+}
+
+.home-stat-change {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.875rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.home-stat-change.positive {
+  color: #22c55e;
+}
+
+.home-stat-change.negative {
+  color: #ef4444;
+}
+
+.home-stat-change.neutral {
+  color: #9ca3af;
+}
+
+/* Quick Actions */
+.home-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.home-section-title {
+  font-family: 'New Amsterdam', sans-serif;
+  font-size: 1.75rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 400;
+}
+
+.home-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.home-action-card {
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(31, 41, 55, 0.85);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-action-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--action-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.home-action-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  border-color: rgba(31, 41, 55, 1);
+}
+
+.home-action-card:hover::before {
+  transform: scaleX(1);
+}
+
+.home-action-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.home-action-card:hover .home-action-icon {
+  transform: scale(1.1);
+}
+
+.home-action-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.home-action-title {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 500;
+}
+
+.home-action-description {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 300;
+}
+
+.home-action-arrow {
+  font-size: 1.25rem;
+  color: #6b7280;
+  transition: transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.home-action-card:hover .home-action-arrow {
+  transform: translateX(4px);
+  color: var(--action-color);
+}
+
+/* Recent Activity */
+.home-recent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.home-recent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.home-view-all {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #22c55e;
+  text-decoration: none;
+  font-weight: 500;
+  transition: gap 0.2s ease;
+}
+
+.home-view-all:hover {
+  gap: 0.75rem;
+}
+
+.home-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.home-recent-item {
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(31, 41, 55, 0.85);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-recent-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.home-recent-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.home-recent-icon.income {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.home-recent-icon.expense {
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+}
+
+.home-recent-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.home-recent-title {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1rem;
+  color: #f9fafb;
+  margin: 0;
+  font-weight: 500;
+}
+
+.home-recent-date {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  font-weight: 300;
+}
+
+.home-recent-amount {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.home-recent-amount.positive {
+  color: #22c55e;
+}
+
+.home-recent-amount.negative {
+  color: #ef4444;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .home-welcome {
+    grid-template-columns: 1fr;
+  }
+
+  .home-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-actions-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .home-page-main {
+    padding: 1.5rem;
+    gap: 2rem;
+    margin-left: 0 !important;
+  }
+
+  .home-welcome-title {
+    font-size: 2rem;
+  }
+
+  .home-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .home-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
