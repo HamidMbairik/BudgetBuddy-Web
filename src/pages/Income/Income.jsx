@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Sidebar from '../../components/common/sidebar'
 import { useSidebar } from '../../contexts/SidebarContext'
+import { useAuth } from '../../contexts/AuthContext'
+import { getIncome, addIncome, updateTransaction, deleteTransaction } from '../../services/transactionService'
 import './Income.css'
 import { TbTrendingUp, TbPlus, TbSearch, TbEdit, TbTrash, TbCalendar, TbFilter, TbX, TbMoneybag } from 'react-icons/tb'
 import { usePreferences } from '../../contexts/PreferencesContext'
@@ -8,40 +10,11 @@ import { usePreferences } from '../../contexts/PreferencesContext'
 const Income = () => {
   const { isCollapsed } = useSidebar()
   const { formatCurrency, t } = usePreferences()
-  const [income, setIncome] = useState([
-    {
-      id: 1,
-      amount: 2500.0,
-      category: 'Salary',
-      description: 'Monthly Salary',
-      date: '2024-01-15',
-      source: 'Employer',
-    },
-    {
-      id: 2,
-      amount: 800.0,
-      category: 'Freelance',
-      description: 'Web Development Project',
-      date: '2024-01-12',
-      source: 'Client',
-    },
-    {
-      id: 3,
-      amount: 150.0,
-      category: 'Investment',
-      description: 'Dividend Payment',
-      date: '2024-01-10',
-      source: 'Stock Portfolio',
-    },
-    {
-      id: 4,
-      amount: 300.0,
-      category: 'Side Hustle',
-      description: 'Consulting Work',
-      date: '2024-01-08',
-      source: 'Client',
-    },
-  ])
+  const { currentUser } = useAuth()
+  const [income, setIncome] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
 
   const [showAddForm, setShowAddForm] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -54,6 +27,36 @@ const Income = () => {
     date: new Date().toISOString().split('T')[0],
     source: 'Employer',
   })
+
+  // Load income data from Firebase
+  useEffect(() => {
+    const loadIncomeData = async () => {
+      if (!currentUser?.uid) return
+
+      setLoading(true)
+      setError(null)
+      try {
+        const result = await getIncome(currentUser.uid)
+        if (result.error) {
+          setError(result.error)
+        } else {
+          // Convert Firestore dates to string format for display
+          const formattedIncome = result.data.map((item) => ({
+            ...item,
+            date: item.date ? item.date.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          }))
+          setIncome(formattedIncome)
+        }
+      } catch (err) {
+        setError('Failed to load income data')
+        console.error('Load income error:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadIncomeData()
+  }, [currentUser])
 
   const links = [
     { name: 'Home', path: '/home' },
@@ -78,13 +81,6 @@ const Income = () => {
     Other: '#9ca3af',
   }
 
-  // TODO: Replace with backend API call
-  // Example: const income = await fetch('/api/income').then(r => r.json())
-  const loadIncome = async () => {
-    // This would fetch from backend
-    return income
-  }
-
   // Filter income
   const filteredIncome = income.filter((item) => {
     const matchesSearch =
@@ -105,38 +101,115 @@ const Income = () => {
         .reduce((sum, i) => sum + i.amount, 0),
     }))
 
-  // TODO: Replace with backend API call
-  // Example: await fetch('/api/income', { method: 'POST', body: JSON.stringify(formData) })
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (editingId) {
-      // Update existing income
-      setIncome(income.map((item) => (item.id === editingId ? { ...formData, id: editingId, amount: parseFloat(formData.amount) } : item)))
-      setEditingId(null)
-    } else {
-      // Add new income
-      const newIncome = {
-        id: income.length + 1,
-        ...formData,
-        amount: parseFloat(formData.amount),
-      }
-      setIncome([newIncome, ...income])
+    if (!currentUser?.uid) {
+      setError('You must be logged in to add income')
+      return
     }
-    setFormData({
-      amount: '',
-      category: 'Salary',
-      description: '',
-      date: new Date().toISOString().split('T')[0],
-      source: 'Employer',
-    })
-    setShowAddForm(false)
+
+    setSubmitting(true)
+    setError(null)
+
+    try {
+      if (editingId) {
+        // Update existing income
+        const result = await updateTransaction(currentUser.uid, editingId, {
+          amount: parseFloat(formData.amount),
+          category: formData.category,
+          description: formData.description,
+          date: formData.date,
+          source: formData.source,
+        })
+
+        if (result.error) {
+          setError(result.error)
+        } else {
+          // Reload income data
+          const incomeResult = await getIncome(currentUser.uid)
+          if (!incomeResult.error) {
+            const formattedIncome = incomeResult.data.map((item) => ({
+              ...item,
+              date: item.date ? item.date.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            }))
+            setIncome(formattedIncome)
+          }
+          setEditingId(null)
+          setShowAddForm(false)
+          setFormData({
+            amount: '',
+            category: 'Salary',
+            description: '',
+            date: new Date().toISOString().split('T')[0],
+            source: 'Employer',
+          })
+        }
+      } else {
+        // Add new income
+        const result = await addIncome(currentUser.uid, {
+          amount: parseFloat(formData.amount),
+          category: formData.category,
+          description: formData.description,
+          date: formData.date,
+          source: formData.source,
+        })
+
+        if (result.error) {
+          setError(result.error)
+        } else {
+          // Reload income data
+          const incomeResult = await getIncome(currentUser.uid)
+          if (!incomeResult.error) {
+            const formattedIncome = incomeResult.data.map((item) => ({
+              ...item,
+              date: item.date ? item.date.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            }))
+            setIncome(formattedIncome)
+          }
+          setShowAddForm(false)
+          setFormData({
+            amount: '',
+            category: 'Salary',
+            description: '',
+            date: new Date().toISOString().split('T')[0],
+            source: 'Employer',
+          })
+        }
+      }
+    } catch (err) {
+      setError('Failed to save income entry')
+      console.error('Submit error:', err)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
-  // TODO: Replace with backend API call
-  // Example: await fetch(`/api/income/${id}`, { method: 'DELETE' })
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
+    if (!currentUser?.uid) return
+
     if (window.confirm('Are you sure you want to delete this income entry?')) {
-      setIncome(income.filter((item) => item.id !== id))
+      setLoading(true)
+      try {
+        const result = await deleteTransaction(currentUser.uid, id)
+        if (result.error) {
+          setError(result.error)
+        } else {
+          // Reload income data
+          const incomeResult = await getIncome(currentUser.uid)
+          if (!incomeResult.error) {
+            const formattedIncome = incomeResult.data.map((item) => ({
+              ...item,
+              date: item.date ? item.date.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            }))
+            setIncome(formattedIncome)
+          }
+        }
+      } catch (err) {
+        setError('Failed to delete income entry')
+        console.error('Delete error:', err)
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
@@ -187,6 +260,31 @@ const Income = () => {
             <TbPlus /> {showAddForm ? 'Cancel' : t('add_income')}
             </button>
           </header>
+
+          {/* Error Message */}
+          {error && (
+            <div style={{
+              padding: '12px',
+              backgroundColor: '#fee2e2',
+              color: '#dc2626',
+              borderRadius: '6px',
+              marginBottom: '16px',
+              fontSize: '14px',
+            }}>
+              {error}
+            </div>
+          )}
+
+          {/* Loading State */}
+          {loading && (
+            <div style={{
+              padding: '40px',
+              textAlign: 'center',
+              color: '#9ca3af',
+            }}>
+              Loading income data...
+            </div>
+          )}
 
           {/* Summary Cards */}
           <section className="income-summary">
@@ -321,11 +419,11 @@ const Income = () => {
                 </div>
               </div>
               <div className="form-actions">
-                <button type="button" className="cancel-btn" onClick={handleCancel}>
+                <button type="button" className="cancel-btn" onClick={handleCancel} disabled={submitting}>
                   <TbX /> Cancel
                 </button>
-                <button type="submit" className="submit-btn">
-                  {editingId ? 'Update Income' : 'Add Income'}
+                <button type="submit" className="submit-btn" disabled={submitting}>
+                  {submitting ? 'Saving...' : editingId ? 'Update Income' : 'Add Income'}
                 </button>
               </div>
             </form>

@@ -1,15 +1,28 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import Navbar from '../../components/common/navbar'
 import Footer from '../../components/common/footer'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
 import { TbMail, TbLock, TbArrowRight } from 'react-icons/tb'
+import { useAuth } from '../../contexts/AuthContext'
 import './Login.css'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isSocialLoading, setIsSocialLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const { signIn, signInWithGoogle, signInWithGitHub, isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/home')
+    }
+  }, [isAuthenticated, navigate])
 
   const links = [
     { name: 'Home', path: '/' },
@@ -18,22 +31,77 @@ const Login = () => {
     { name: 'Contact', path: '/contact' },
   ]
 
+  const handleGoogleSignIn = async () => {
+    setErrorMessage('')
+    setIsSocialLoading(true)
+    
+    try {
+      const result = await signInWithGoogle()
+      
+      if (result.success) {
+        // Redirect to the page user was trying to access, or /home as default
+        const from = location.state?.from || '/home'
+        navigate(from, { replace: true })
+      } else {
+        setErrorMessage(result.error || 'Failed to sign in with Google. Please try again.')
+      }
+    } catch (error) {
+      setErrorMessage('An unexpected error occurred. Please try again.')
+      console.error('Google sign in error:', error)
+    } finally {
+      setIsSocialLoading(false)
+    }
+  }
+
+  const handleGitHubSignIn = async () => {
+    setErrorMessage('')
+    setIsSocialLoading(true)
+    
+    try {
+      const result = await signInWithGitHub()
+      
+      if (result.success) {
+        // Redirect to the page user was trying to access, or /home as default
+        const from = location.state?.from || '/home'
+        navigate(from, { replace: true })
+      } else {
+        setErrorMessage(result.error || 'Failed to sign in with GitHub. Please try again.')
+      }
+    } catch (error) {
+      setErrorMessage('An unexpected error occurred. Please try again.')
+      console.error('GitHub sign in error:', error)
+    } finally {
+      setIsSocialLoading(false)
+    }
+  }
+
   const onSubmit = async (e) => {
     e.preventDefault()
+    setErrorMessage('')
+    
     if (!email || !password) {
-      alert('Please fill in all fields')
+      setErrorMessage('Please fill in all fields')
       return
     }
 
     setIsLoading(true)
-    // TODO: Replace with backend API call
-    // Example: await fetch('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) })
-    setTimeout(() => {
-      console.log('Login submitted:', { email, password })
+    
+    try {
+      const result = await signIn(email, password)
+      
+      if (result.success) {
+        // Redirect to the page user was trying to access, or /home as default
+        const from = location.state?.from || '/home'
+        navigate(from, { replace: true })
+      } else {
+        setErrorMessage(result.error || 'Failed to sign in. Please try again.')
+      }
+    } catch (error) {
+      setErrorMessage('An unexpected error occurred. Please try again.')
+      console.error('Login error:', error)
+    } finally {
       setIsLoading(false)
-      setEmail('')
-      setPassword('')
-    }, 1000)
+    }
   }
 
   return (
@@ -50,11 +118,21 @@ const Login = () => {
           <form className="login-form" onSubmit={onSubmit}>
             {/* Social Login Buttons */}
             <div className="social-buttons">
-              <button type="button" className="social-btn google-btn">
-                <FaGoogle /> Continue with Google
+              <button 
+                type="button" 
+                className="social-btn google-btn"
+                onClick={handleGoogleSignIn}
+                disabled={isSocialLoading || isLoading}
+              >
+                <FaGoogle /> {isSocialLoading ? 'Signing in...' : 'Continue with Google'}
               </button>
-              <button type="button" className="social-btn github-btn">
-                <FaGithub /> Continue with GitHub
+              <button 
+                type="button" 
+                className="social-btn github-btn"
+                onClick={handleGitHubSignIn}
+                disabled={isSocialLoading || isLoading}
+              >
+                <FaGithub /> {isSocialLoading ? 'Signing in...' : 'Continue with GitHub'}
               </button>
             </div>
 
@@ -95,6 +173,21 @@ const Login = () => {
                 required
               />
             </div>
+
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="error-message" style={{
+                padding: '12px',
+                backgroundColor: '#fee2e2',
+                color: '#dc2626',
+                borderRadius: '6px',
+                marginBottom: '16px',
+                fontSize: '14px',
+                textAlign: 'center'
+              }}>
+                {errorMessage}
+              </div>
+            )}
 
             {/* Submit Button */}
             <button type="submit" className="submit-btn" disabled={isLoading}>

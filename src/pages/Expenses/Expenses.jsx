@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Sidebar from '../../components/common/sidebar'
 import { useSidebar } from '../../contexts/SidebarContext'
+import { useAuth } from '../../contexts/AuthContext'
+import { getExpenses, addExpense, updateTransaction, deleteTransaction } from '../../services/transactionService'
 import './Expenses.css'
 import {
   TbTrendingDown,
@@ -18,48 +20,11 @@ import { usePreferences } from '../../contexts/PreferencesContext'
 const Expenses = () => {
   const { isCollapsed } = useSidebar()
   const { formatCurrency, t } = usePreferences()
-  const [expenses, setExpenses] = useState([
-    {
-      id: 1,
-      amount: 85.5,
-      category: 'Food',
-      description: 'Grocery Shopping',
-      date: '2024-01-15',
-      paymentMethod: 'Credit Card',
-    },
-    {
-      id: 2,
-      amount: 45.0,
-      category: 'Transport',
-      description: 'Uber ride',
-      date: '2024-01-14',
-      paymentMethod: 'Debit Card',
-    },
-    {
-      id: 3,
-      amount: 120.0,
-      category: 'Bills',
-      description: 'Electricity Bill',
-      date: '2024-01-12',
-      paymentMethod: 'Bank Transfer',
-    },
-    {
-      id: 4,
-      amount: 65.0,
-      category: 'Entertainment',
-      description: 'Movie tickets',
-      date: '2024-01-10',
-      paymentMethod: 'Credit Card',
-    },
-    {
-      id: 5,
-      amount: 250.0,
-      category: 'Shopping',
-      description: 'New clothes',
-      date: '2024-01-08',
-      paymentMethod: 'Credit Card',
-    },
-  ])
+  const { currentUser } = useAuth()
+  const [expenses, setExpenses] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
 
   const [showAddForm, setShowAddForm] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -72,6 +37,36 @@ const Expenses = () => {
     date: new Date().toISOString().split('T')[0],
     paymentMethod: 'Credit Card',
   })
+
+  // Load expenses data from Firebase
+  useEffect(() => {
+    const loadExpensesData = async () => {
+      if (!currentUser?.uid) return
+
+      setLoading(true)
+      setError(null)
+      try {
+        const result = await getExpenses(currentUser.uid)
+        if (result.error) {
+          setError(result.error)
+        } else {
+          // Convert Firestore dates to string format for display
+          const formattedExpenses = result.data.map((item) => ({
+            ...item,
+            date: item.date ? item.date.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          }))
+          setExpenses(formattedExpenses)
+        }
+      } catch (err) {
+        setError('Failed to load expenses data')
+        console.error('Load expenses error:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadExpensesData()
+  }, [currentUser])
 
   const links = [
     { name: 'Home', path: '/home' },
@@ -97,13 +92,6 @@ const Expenses = () => {
     Other: '#9ca3af',
   }
 
-  // TODO: Replace with backend API call
-  // Example: const expenses = await fetch('/api/expenses').then(r => r.json())
-  const loadExpenses = async () => {
-    // This would fetch from backend
-    return expenses
-  }
-
   // Filter expenses
   const filteredExpenses = expenses.filter((expense) => {
     const matchesSearch =
@@ -124,38 +112,115 @@ const Expenses = () => {
         .reduce((sum, e) => sum + e.amount, 0),
     }))
 
-  // TODO: Replace with backend API call
-  // Example: await fetch('/api/expenses', { method: 'POST', body: JSON.stringify(formData) })
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (editingId) {
-      // Update existing expense
-      setExpenses(expenses.map((exp) => (exp.id === editingId ? { ...formData, id: editingId, amount: parseFloat(formData.amount) } : exp)))
-      setEditingId(null)
-    } else {
-      // Add new expense
-      const newExpense = {
-        id: expenses.length + 1,
-        ...formData,
-        amount: parseFloat(formData.amount),
-      }
-      setExpenses([newExpense, ...expenses])
+    if (!currentUser?.uid) {
+      setError('You must be logged in to add expenses')
+      return
     }
-    setFormData({
-      amount: '',
-      category: 'Food',
-      description: '',
-      date: new Date().toISOString().split('T')[0],
-      paymentMethod: 'Credit Card',
-    })
-    setShowAddForm(false)
+
+    setSubmitting(true)
+    setError(null)
+
+    try {
+      if (editingId) {
+        // Update existing expense
+        const result = await updateTransaction(currentUser.uid, editingId, {
+          amount: parseFloat(formData.amount),
+          category: formData.category,
+          description: formData.description,
+          date: formData.date,
+          paymentMethod: formData.paymentMethod,
+        })
+
+        if (result.error) {
+          setError(result.error)
+        } else {
+          // Reload expenses data
+          const expensesResult = await getExpenses(currentUser.uid)
+          if (!expensesResult.error) {
+            const formattedExpenses = expensesResult.data.map((item) => ({
+              ...item,
+              date: item.date ? item.date.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            }))
+            setExpenses(formattedExpenses)
+          }
+          setEditingId(null)
+          setShowAddForm(false)
+          setFormData({
+            amount: '',
+            category: 'Food',
+            description: '',
+            date: new Date().toISOString().split('T')[0],
+            paymentMethod: 'Credit Card',
+          })
+        }
+      } else {
+        // Add new expense
+        const result = await addExpense(currentUser.uid, {
+          amount: parseFloat(formData.amount),
+          category: formData.category,
+          description: formData.description,
+          date: formData.date,
+          paymentMethod: formData.paymentMethod,
+        })
+
+        if (result.error) {
+          setError(result.error)
+        } else {
+          // Reload expenses data
+          const expensesResult = await getExpenses(currentUser.uid)
+          if (!expensesResult.error) {
+            const formattedExpenses = expensesResult.data.map((item) => ({
+              ...item,
+              date: item.date ? item.date.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            }))
+            setExpenses(formattedExpenses)
+          }
+          setShowAddForm(false)
+          setFormData({
+            amount: '',
+            category: 'Food',
+            description: '',
+            date: new Date().toISOString().split('T')[0],
+            paymentMethod: 'Credit Card',
+          })
+        }
+      }
+    } catch (err) {
+      setError('Failed to save expense')
+      console.error('Submit error:', err)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
-  // TODO: Replace with backend API call
-  // Example: await fetch(`/api/expenses/${id}`, { method: 'DELETE' })
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
+    if (!currentUser?.uid) return
+
     if (window.confirm('Are you sure you want to delete this expense?')) {
-      setExpenses(expenses.filter((exp) => exp.id !== id))
+      setLoading(true)
+      try {
+        const result = await deleteTransaction(currentUser.uid, id)
+        if (result.error) {
+          setError(result.error)
+        } else {
+          // Reload expenses data
+          const expensesResult = await getExpenses(currentUser.uid)
+          if (!expensesResult.error) {
+            const formattedExpenses = expensesResult.data.map((item) => ({
+              ...item,
+              date: item.date ? item.date.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            }))
+            setExpenses(formattedExpenses)
+          }
+        }
+      } catch (err) {
+        setError('Failed to delete expense')
+        console.error('Delete error:', err)
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
@@ -206,6 +271,31 @@ const Expenses = () => {
             <TbPlus /> {showAddForm ? 'Cancel' : t('add_expense')}
             </button>
           </header>
+
+          {/* Error Message */}
+          {error && (
+            <div style={{
+              padding: '12px',
+              backgroundColor: '#fee2e2',
+              color: '#dc2626',
+              borderRadius: '6px',
+              marginBottom: '16px',
+              fontSize: '14px',
+            }}>
+              {error}
+            </div>
+          )}
+
+          {/* Loading State */}
+          {loading && (
+            <div style={{
+              padding: '40px',
+              textAlign: 'center',
+              color: '#9ca3af',
+            }}>
+              Loading expenses data...
+            </div>
+          )}
 
           {/* Summary Cards */}
           <section className="expenses-summary">
@@ -342,11 +432,11 @@ const Expenses = () => {
                 </div>
               </div>
               <div className="form-actions">
-                <button type="button" className="cancel-btn" onClick={handleCancel}>
+                <button type="button" className="cancel-btn" onClick={handleCancel} disabled={submitting}>
                   <TbX /> Cancel
                 </button>
-                <button type="submit" className="submit-btn">
-                  {editingId ? 'Update Expense' : 'Add Expense'}
+                <button type="submit" className="submit-btn" disabled={submitting}>
+                  {submitting ? 'Saving...' : editingId ? 'Update Expense' : 'Add Expense'}
                 </button>
               </div>
             </form>

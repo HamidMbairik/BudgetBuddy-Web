@@ -1,8 +1,10 @@
 // Navbar.jsx
 import { color } from 'framer-motion'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { usePreferences } from '../../contexts/PreferencesContext'
+import { useAuth } from '../../contexts/AuthContext'
+import './navbar.css'
 
 // Navbar styles
 const navbarStyle = {
@@ -63,34 +65,126 @@ const LogInButtonStyle = {
 // Okay, I remembered React needs components to start with a capital letter
 const Navbar = ({ title, links, currentPage}) => {
   const { t } = usePreferences()
+  const { isAuthenticated, signOut, currentUser } = useAuth()
+  const navigate = useNavigate()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMobileMenuOpen])
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
+  }
+
+  const handleSignOut = async () => {
+    closeMobileMenu()
+    const result = await signOut()
+    if (result.success) {
+      navigate('/')
+    }
+  }
 
   return (
-    <nav style={navbarStyle}>
-      <h1>
-        <Link to="/" style={logoStyle}>{title}</Link>
-      </h1>
+    <>
+      {isMobileMenuOpen && (
+        <div 
+          className="mobile-menu-overlay" 
+          onClick={closeMobileMenu}
+          aria-hidden="true"
+        />
+      )}
+      <nav style={navbarStyle} className="navbar">
+        <h1>
+          <Link to="/" style={logoStyle} className="navbar-logo">{title}</Link>
+        </h1>
 
-      <div>
-        {links && links.map((link, index) => (
-          <Link
-            key={index}
-            to={link.path}
-            style={ link.name.toLowerCase() === currentPage ? {...LinkStyle, ...currentPageStyle} : LinkStyle }
-          >
-            {t(link.name.toLowerCase())}
-          </Link>
-        ))}
-      </div>
+        <div className={`navbar-links ${isMobileMenuOpen ? 'active' : ''}`}>
+          {links && links.map((link, index) => (
+            <Link
+              key={index}
+              to={link.path}
+              style={ link.name.toLowerCase() === currentPage ? {...LinkStyle, ...currentPageStyle} : LinkStyle }
+              className="navbar-link"
+              onClick={closeMobileMenu}
+            >
+              {t(link.name.toLowerCase())}
+            </Link>
+          ))}
+        </div>
 
-      <div>
-        <Link to="/signup">
-          <button style={SignUpButtonStyle}>{t('get_started')}</button>
-        </Link>
-        <Link to="/login">
-          <button style={LogInButtonStyle}>Log In</button>
-        </Link>
-      </div>
-    </nav>
+        <div className={`navbar-buttons ${isMobileMenuOpen ? 'active' : ''}`}>
+          {isAuthenticated ? (
+            <>
+              <span style={{ 
+                marginLeft: '1rem', 
+                color: '#fff', 
+                fontFamily: 'Josefin Sans, sans-serif',
+                fontSize: '0.9rem'
+              }}>
+                {currentUser?.displayName || currentUser?.email || 'User'}
+              </span>
+              <button 
+                onClick={handleSignOut}
+                style={{
+                  ...LogInButtonStyle,
+                  backgroundColor: '#ef4444',
+                  marginLeft: '1rem'
+                }} 
+                className="navbar-button-logout"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/signup" onClick={closeMobileMenu}>
+                <button style={SignUpButtonStyle} className="navbar-button-signup">{t('get_started')}</button>
+              </Link>
+              <Link to="/login" onClick={closeMobileMenu}>
+                <button style={LogInButtonStyle} className="navbar-button-login">Log In</button>
+              </Link>
+            </>
+          )}
+        </div>
+
+        <button 
+          className="mobile-menu-toggle"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle menu"
+        >
+          <span className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+      </nav>
+    </>
   )
 }
 

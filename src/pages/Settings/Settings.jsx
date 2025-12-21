@@ -1,13 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Sidebar from '../../components/common/sidebar'
 import { useSidebar } from '../../contexts/SidebarContext'
 import './Settings.css'
-import { FiSettings, FiGlobe, FiDollarSign, FiMoon, FiSun } from 'react-icons/fi'
+import { FiSettings, FiGlobe, FiDollarSign, FiMoon, FiSun, FiLogOut } from 'react-icons/fi'
 import { usePreferences } from '../../contexts/PreferencesContext'
+import { useAuth } from '../../contexts/AuthContext'
 
 const Settings = () => {
   const { isCollapsed } = useSidebar()
   const { theme, setTheme, currency, setCurrency, language, setLanguage } = usePreferences()
+  const { signOut, currentUser } = useAuth()
+  const navigate = useNavigate()
+  const [isSigningOut, setIsSigningOut] = useState(false)
 
   const links = [
     { name: 'Home', path: '/home' },
@@ -28,6 +33,7 @@ const Settings = () => {
     { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
     { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
     { code: 'CNY', symbol: '¥', name: 'Chinese Yuan' },
+    { code: 'MAD', symbol: 'د.م.', name: 'Moroccan Dirham' },
   ]
 
   const languages = [
@@ -37,6 +43,7 @@ const Settings = () => {
     { code: 'de', name: 'German' },
     { code: 'it', name: 'Italian' },
     { code: 'pt', name: 'Portuguese' },
+    { code: 'ar', name: 'Arabic' },
   ]
 
   const handleCurrencyChange = (newCurrency) => {
@@ -49,6 +56,22 @@ const Settings = () => {
 
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme)
+  }
+
+  const handleSignOut = async () => {
+    if (window.confirm('Are you sure you want to sign out?')) {
+      setIsSigningOut(true)
+      try {
+        const result = await signOut()
+        if (result.success) {
+          navigate('/')
+        }
+      } catch (error) {
+        console.error('Sign out error:', error)
+      } finally {
+        setIsSigningOut(false)
+      }
+    }
   }
 
   return (
@@ -211,6 +234,44 @@ const Settings = () => {
                     </svg>
                   </div>
                 )}
+              </button>
+            </div>
+          </section>
+
+          {/* Account Settings */}
+          <section className="settings-section">
+            <div className="settings-section-header">
+              <div className="settings-icon-wrapper" style={{ backgroundColor: '#fee2e2', color: '#dc2626' }}>
+                <FiLogOut />
+              </div>
+              <div>
+                <h2 className="settings-section-title">Account</h2>
+                <p className="settings-section-description">Manage your account settings</p>
+              </div>
+            </div>
+            <div className="settings-options">
+              <div style={{ padding: '16px', border: '1px solid #374151', borderRadius: '8px', marginBottom: '12px' }}>
+                <p style={{ margin: '0 0 8px 0', color: '#9ca3af', fontSize: '14px' }}>Signed in as</p>
+                <p style={{ margin: 0, color: '#fff', fontSize: '16px', fontWeight: '500' }}>
+                  {currentUser?.displayName || currentUser?.email || 'User'}
+                </p>
+              </div>
+              <button
+                className="settings-option"
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                style={{
+                  backgroundColor: '#ef4444',
+                  color: '#fff',
+                  border: 'none',
+                  cursor: isSigningOut ? 'not-allowed' : 'pointer',
+                  opacity: isSigningOut ? 0.6 : 1,
+                }}
+              >
+                <div className="option-content">
+                  <FiLogOut style={{ marginRight: '12px', fontSize: '20px' }} />
+                  <span className="option-name">{isSigningOut ? 'Signing out...' : 'Sign Out'}</span>
+                </div>
               </button>
             </div>
           </section>

@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../../components/common/navbar'
 import Footer from '../../components/common/footer'
 import { FaGoogle, FaGithub } from 'react-icons/fa'
 import { TbMail, TbLock, TbUser, TbArrowRight, TbCheck } from 'react-icons/tb'
+import { useAuth } from '../../contexts/AuthContext'
 import './SignUp.css'
 
 const SignUp = () => {
@@ -12,6 +13,17 @@ const SignUp = () => {
   const [password, setPassword] = useState('')
   const [passwordStrength, setPasswordStrength] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isSocialLoading, setIsSocialLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const { signUp, signInWithGoogle, signInWithGitHub, isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/home')
+    }
+  }, [isAuthenticated, navigate])
 
   const links = [
     { name: 'Home', path: '/' },
@@ -39,32 +51,79 @@ const SignUp = () => {
     }
   }
 
+  const handleGoogleSignIn = async () => {
+    setErrorMessage('')
+    setIsSocialLoading(true)
+    
+    try {
+      const result = await signInWithGoogle()
+      
+      if (result.success) {
+        navigate('/home')
+      } else {
+        setErrorMessage(result.error || 'Failed to sign up with Google. Please try again.')
+      }
+    } catch (error) {
+      setErrorMessage('An unexpected error occurred. Please try again.')
+      console.error('Google sign up error:', error)
+    } finally {
+      setIsSocialLoading(false)
+    }
+  }
+
+  const handleGitHubSignIn = async () => {
+    setErrorMessage('')
+    setIsSocialLoading(true)
+    
+    try {
+      const result = await signInWithGitHub()
+      
+      if (result.success) {
+        navigate('/home')
+      } else {
+        setErrorMessage(result.error || 'Failed to sign up with GitHub. Please try again.')
+      }
+    } catch (error) {
+      setErrorMessage('An unexpected error occurred. Please try again.')
+      console.error('GitHub sign up error:', error)
+    } finally {
+      setIsSocialLoading(false)
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setErrorMessage('')
 
     // Check for empty fields
     if (!email || !username || !password) {
-      alert('Please fill in all fields')
+      setErrorMessage('Please fill in all fields')
       return
     }
 
     // Check if password is strong enough
     if (passwordStrength === 'weak') {
-      alert('Please choose a stronger password')
+      setErrorMessage('Please choose a stronger password (at least 6 characters)')
       return
     }
 
     setIsLoading(true)
-    // TODO: Replace with backend API call
-    // Example: await fetch('/api/auth/signup', { method: 'POST', body: JSON.stringify({ email, username, password }) })
-    setTimeout(() => {
-      console.log('Form submitted', { email, username, password })
+    
+    try {
+      const result = await signUp(email, password, username)
+      
+      if (result.success) {
+        // Redirect to home page on successful sign up
+        navigate('/home')
+      } else {
+        setErrorMessage(result.error || 'Failed to create account. Please try again.')
+      }
+    } catch (error) {
+      setErrorMessage('An unexpected error occurred. Please try again.')
+      console.error('Sign up error:', error)
+    } finally {
       setIsLoading(false)
-      setEmail('')
-      setUsername('')
-      setPassword('')
-      setPasswordStrength('')
-    }, 1000)
+    }
   }
 
   return (
@@ -81,11 +140,21 @@ const SignUp = () => {
           <form className="signup-form" onSubmit={handleSubmit}>
             {/* Social Sign Up Buttons */}
             <div className="social-buttons">
-              <button type="button" className="social-btn google-btn">
-                <FaGoogle /> Continue with Google
+              <button 
+                type="button" 
+                className="social-btn google-btn"
+                onClick={handleGoogleSignIn}
+                disabled={isSocialLoading || isLoading}
+              >
+                <FaGoogle /> {isSocialLoading ? 'Signing up...' : 'Continue with Google'}
               </button>
-              <button type="button" className="social-btn github-btn">
-                <FaGithub /> Continue with GitHub
+              <button 
+                type="button" 
+                className="social-btn github-btn"
+                onClick={handleGitHubSignIn}
+                disabled={isSocialLoading || isLoading}
+              >
+                <FaGithub /> {isSocialLoading ? 'Signing up...' : 'Continue with GitHub'}
               </button>
             </div>
 
@@ -149,6 +218,21 @@ const SignUp = () => {
                 </div>
               )}
             </div>
+
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="error-message" style={{
+                padding: '12px',
+                backgroundColor: '#fee2e2',
+                color: '#dc2626',
+                borderRadius: '6px',
+                marginBottom: '16px',
+                fontSize: '14px',
+                textAlign: 'center'
+              }}>
+                {errorMessage}
+              </div>
+            )}
 
             {/* Submit Button */}
             <button type="submit" className="submit-btn" disabled={isLoading}>
